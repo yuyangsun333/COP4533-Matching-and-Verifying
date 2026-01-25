@@ -6,5 +6,3 @@ This repository contains the implementation for the COP4533 Programming Assignme
 - Name: Yuyang Sun, UFID: 38133550  
 - Name: Junhao Li, UFID: 51521823
 
-## Repository Structure
-
