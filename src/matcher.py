@@ -1,3 +1,6 @@
+from collections import deque
+import sys
+
 def data_reader(file_path):
     """
     Read the input data and return as 
@@ -28,4 +31,53 @@ def data_reader(file_path):
 
     return n, hospital_prefs, student_prefs
 
-print(data_reader('data/example.in'))
+# print(data_reader('data/example.in'))
+
+def gale_shapley(n, hospital_prefs, student_prefs):
+    """ 
+    Implement the Gale-Shapley algorithm to find a stable matching
+    """
+    hospital_free = deque()
+
+    for i in range(0, n):
+        hospital_free.append(i + 1)
+
+    # Init all hospitals and students as free
+    hospital_match = [-1] * (n + 1)
+    student_match = [-1] * (n + 1)
+    hospital_next = [0] * (n + 1)  # Track next student to propose to for each hospital
+
+    
+    while hospital_free:
+        current = hospital_free.popleft()
+        current_index = current - 1
+
+        if hospital_next[current] >= n:
+            continue
+
+        next_i = hospital_next[current]
+        student = hospital_prefs[current_index][next_i]
+        hospital_next[current] += 1
+
+        if student_match[student] == -1: # student is not matched
+            hospital_match[current] = student
+            student_match[student] = current
+        else:
+            current_match = student_match[student]
+            student_index = student - 1
+            
+            # check student preference
+            if student_prefs[student_index].index(current) < student_prefs[student_index].index(current_match):
+                hospital_match[current] = student
+                student_match[student] = current
+                hospital_match[current_match] = -1
+                hospital_free.append(current_match)
+            else:
+                hospital_free.append(current)
+
+    return hospital_match[1:]
+
+# Test:
+# n, hospital_prefs, student_prefs = data_reader('data/example.in')
+# matching = gale_shapley(n, hospital_prefs, student_prefs)
+# print("Hospital Matches:", matching)
