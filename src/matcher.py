@@ -81,3 +81,23 @@ def gale_shapley(n, hospital_prefs, student_prefs):
 # n, hospital_prefs, student_prefs = data_reader('data/example.in')
 # matching = gale_shapley(n, hospital_prefs, student_prefs)
 # print("Hospital Matches:", matching)
+
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python3 src/matcher.py <input_file>")
+        sys.exit(1)
+
+    input_file = sys.argv[1]
+
+    n, hospital_prefs, student_prefs = data_reader(input_file)
+    matching = gale_shapley(n, hospital_prefs, student_prefs)
+    #print("n =", n)
+
+
+    for i, student in enumerate(matching, start=1):
+        print(i, student)
+
+
+if __name__ == "__main__":
+    main()
