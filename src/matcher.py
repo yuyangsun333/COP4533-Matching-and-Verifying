@@ -47,7 +47,14 @@ def gale_shapley(n, hospital_prefs, student_prefs):
     student_match = [-1] * (n + 1)
     hospital_next = [0] * (n + 1)  # Track next student to propose to for each hospital
 
-    
+    # position of hospital in student's preference list
+    rank = [[0] * (n + 1) for _ in range(n + 1)]
+
+    for s in range(1, n + 1):
+        for pos in range(n): # 0 is best
+            h = student_prefs[s - 1][pos]
+            rank[s][h] = pos
+
     while hospital_free:
         current = hospital_free.popleft()
         current_index = current - 1
@@ -64,10 +71,9 @@ def gale_shapley(n, hospital_prefs, student_prefs):
             student_match[student] = current
         else:
             current_match = student_match[student]
-            student_index = student - 1
             
             # check student preference
-            if student_prefs[student_index].index(current) < student_prefs[student_index].index(current_match):
+            if rank[student][current] < rank[student][current_match]:
                 hospital_match[current] = student
                 student_match[student] = current
                 hospital_match[current_match] = -1
