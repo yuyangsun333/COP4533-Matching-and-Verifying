@@ -10,6 +10,21 @@ This repository contains the implementation for the COP4533 Programming Assignme
 - Python **3.x**
 - No external libraries are required for Task A and B.
 
+## Project Structure
+- `src/` : Core implementation files (Task A & Task B)
+  - `matcher.py` : Implements the hospital-proposing Gale–Shapley algorithm (Task A).
+  - `verifier.py` : Verifies whether a proposed matching is valid and stable (Task B).
+
+- `data/` : Example input/output files for quick testing
+  - `example.in` : Sample preference input file.
+  - `example.out` : Sample matching output file.
+
+- `scripts/` : Helper scripts for testing / debugging / scalability experiments
+  - `generate_in.py` : Generates random `.in` preference files of size `n`.
+  - `generate_out.py` : Generates random valid `.out` matchings (debug/format testing only; may be unstable).
+
+- `README.md` : Project documentation and usage instructions.
+
 ## Input Format
 
 ### Matcher
