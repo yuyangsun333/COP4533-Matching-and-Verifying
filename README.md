@@ -36,7 +36,7 @@ Input describes preferences for a one-to-one market with complete strict ranking
 
 ### Verifier
 
-The virifier takes **two input files**:
+The verifier takes **two input files**:
 - **Preference file (`.in`)**: the same format as the matcher input, containing the hospital and student rankings.
 - **Matching file (`.out`)**: the proposed matching to be verified.
 
