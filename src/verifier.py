@@ -1,4 +1,6 @@
 from typing import List, Tuple
+from matcher import data_reader
+import sys
 
 def verify_validity(n: int, pairs: List[Tuple[int, int]]) -> Tuple[bool, str]:
     """
@@ -93,6 +95,7 @@ def get_rank(prefs: List[List[int]], n: int) -> List[List[int]]:
     
     return rank
 
+
 def verify_stability(n: int,
                      hospital_prefs: List[List[int]],
                      student_prefs: List[List[int]],
@@ -112,11 +115,6 @@ def verify_stability(n: int,
              otherwise (False, "UNSTABLE: blocking pair (h, s)").
     :rtype: Tuple[bool, str]
     """
-    # Must be valid first
-    is_valid, msg = verify_validity(n, pairs)
-    if not is_valid:
-        return False, msg
-    
     # Build matching maps
     match_h, match_s = get_match(n, pairs)
 
@@ -139,3 +137,62 @@ def verify_stability(n: int,
                 return False, f"UNSTABLE: Blocking pair ({h}, {s})"
             
     return True, "STABLE"
+
+
+def read_matching(out_path: str) -> List[Tuple[int, int]]:
+    """
+    Read the matching output file (.out).
+    Each line should be: hospital_id student_id
+    
+    :param out_path: Output file path (as one of the input in verifier).
+    :type out_path: str
+    :return: A list of matched pairs where each tuple is (hospital_id, student_id).
+    :rtype: List[Tuple[int, int]]
+    """
+    pairs = []
+
+    with open(out_path, "r") as file:
+        for line in file:
+            line = line.strip()
+            if not line:
+                continue
+            h, s = map(int, line.split())
+            pairs.append((h, s))
+
+    return pairs
+
+def main():
+    """
+    Run verifier from command line:
+
+        Usage: python3 src/verifier.py <input_file> <output_file>
+    """
+    if len(sys.argv) != 3:
+        print("Usage: python3 src/verifier.py <input_file> <output_file>")
+        sys.exit(2)
+    
+    in_file = sys.argv[1]
+    out_file = sys.argv[2]
+
+    # Read input preferences
+    n, hospital_prefs, student_prefs = data_reader(in_file)
+
+    # Read matching output pairs
+    pairs = read_matching(out_file)
+
+    # Validity check first (Task b(a))
+    is_valid, vmsg = verify_validity(n, pairs)
+    if not is_valid:
+        print(vmsg)
+        return False
+
+    # Stability check (Task b(b))
+    is_stable, smsg = verify_stability(n, hospital_prefs, student_prefs, pairs)
+    if not is_stable:
+        print(smsg)
+    else:
+        print("VALID STABLE")
+
+
+if __name__ == "__main__":
+    main()
