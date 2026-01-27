@@ -147,10 +147,11 @@ Task C generates the following files in results/:
 
 ![Verifier Runtime](results/taskC_verifier.png)
 
+
 ### Observed Trend (Task C Conclusion)
 
-The running time of the matcher grows approximately quadratic with n, which is consistent with the theoretical time complexity of the Gale-Shapley algorithm.
+The running time of the matcher increases roughly quadratically as n grows, which matches what we expect from the Gale–Shapley algorithm.
 
-The validator's runtime also increases with the increase of n, but it is slower.
+The verifier runtime also increases with larger values of n. In our experiments, it can take slightly longer than the matcher for large inputs, but its growth rate is generally less steep.
 
-Both of these algorithms can scale predictably and remain effective for medium-scale problems.
+Overall, both the matcher and the verifier scale in a predictable way and run efficiently for moderate problem sizes.
