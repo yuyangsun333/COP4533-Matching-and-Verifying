@@ -1,6 +1,6 @@
 # COP4533-Matching-and-Verifying
 
-This repository contains the implementation for the COP4533 Programming Assignment 1 on stable matching and verification using the hospital-proposing Gale–Shapley algorithm.
+This repository contains the implementation for the COP4533 Programming Assignment 1 on stable matching and verification using the hospital-proposing Gale–Shapley algorithm and a verifier to check validity and stability. It also includes scalability experiments measuring runtime performance.
 
 ## Team Members
 - Name: Yuyang Sun, UFID: 38133550  
@@ -9,6 +9,7 @@ This repository contains the implementation for the COP4533 Programming Assignme
 ## Requirements / Dependencies
 - Python **3.x**
 - No external libraries are required for Task A and B.
+- For Task C plotting: matplotlib
 
 ## Project Structure
 - `src/` : Core implementation files (Task A & Task B)
@@ -75,6 +76,11 @@ UNSTABLE: Blocking pair (h, s)
 
 ## Task A: Matcher
 
+### Description
+
+Implements the hospital-proposing Gale–Shapley algorithm to compute a stable matching.
+Hospitals propose to students in order of preference, and students tentatively accept the best proposal received so far.
+
 ### How to Run
 Example Input file: data/example.in
 
@@ -86,6 +92,12 @@ python3 src/matcher.py data/example.in
 Output: prints n lines in the format i j (one line per hospital).
 
 ## Task B: Verifier
+
+### Description
+
+The verifier checks whether a proposed matching is:
+- Valid (one-to-one, all IDs in range, no duplicates)
+- Stable (no blocking pairs)
 
 ### How to Run
 Example Input file: data/example.in
@@ -99,4 +111,46 @@ python3 src/verifier.py data/example.in data/example.out
 Output: prints one of the following messages:
 - `VALID STABLE` (matching is valid and stable)
 - `INVALID: ...` (matching is not a valid one-to-one assignment)
-- `UNSTABLE: Blocking pair (h, s)` (matching contains a blocking pair)
+- `UNSTABLE: Blocking pair (h, s)` (matching contains a blocking pair) 
+
+## Task C: Scalability and Runtime Analysis
+
+### Description
+We measure the running time of both the matcher and the verifier for increasing problem sizes:
+```text
+n = 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
+```
+For each n:
+- Random preference inputs are generated
+- The matcher and verifier are each run multiple times
+- The average runtime is recorded
+
+### How to Run
+Activate your virtual environment first, then run:
+
+```bash
+python3 scripts/task_c.py
+```
+
+### Output Files
+
+Task C generates the following files in results/:
+- taskC_matcher.png — matcher runtime vs n
+- taskC_verifier.png — verifier runtime vs n
+- taskC_times.csv — raw timing data
+
+### Matcher Runtime
+
+![Matcher Runtime](results/taskC_matcher.png)
+
+### Verifier Runtime
+
+![Verifier Runtime](results/taskC_verifier.png)
+
+### Observed Trend (Task C Conclusion)
+
+The running time of the matcher grows approximately quadratic with n, which is consistent with the theoretical time complexity of the Gale-Shapley algorithm.
+
+The validator's runtime also increases with the increase of n, but it is slower.
+
+Both of these algorithms can scale predictably and remain effective for medium-scale problems.
