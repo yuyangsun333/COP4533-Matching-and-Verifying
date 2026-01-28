@@ -8,14 +8,32 @@ def data_reader(file_path):
         hostial preferences list
         student preferences list
     """
-    with open(file_path, 'r') as file:
-        data = file.readlines()
+    try: # read file
+        with open(file_path, 'r') as file:
+            data = file.readlines()
+    except FileNotFoundError:
+        raise ValueError(f"INVALID: file not found: {file_path}")
     
     # Remove any trailing newlines and spaces
     data = [line.strip() for line in data if line.strip()]
 
     if not data:
-        raise ValueError("Input file is empty or improperly formatted.")
+        raise ValueError("INVALID: input file is empty or improperly formatted.")
+
+    # parse n
+    try:
+        n = int(data[0])
+    except ValueError:
+        raise ValueError("INVALID: first line must be an integer")
+
+    if n < 1:
+        raise ValueError("INVALID: n must be >= 1.")
+    
+    expected_lines = 1 + 2*n
+    if len(data) != expected_lines:
+        raise ValueError(
+            f"INVALID: expected {expected_lines} lines (1 + 2n), got {len(data)}."
+        )
 
     n = int(data[0])
     hospital_prefs = []
