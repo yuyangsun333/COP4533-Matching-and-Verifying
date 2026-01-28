@@ -95,6 +95,31 @@ def get_rank(prefs: List[List[int]], n: int) -> List[List[int]]:
     
     return rank
 
+def verify_preferences(n: int,
+                       hospital_prefs: List[List[int]],
+                       student_prefs: List[List[int]]) -> Tuple[bool, str]:
+    """
+    Verify input preference tables are well-formed:
+    
+    :param n: The total number of hospitals (which equals the number of students)
+    :type n: int
+    :param hospital_prefs: Preference lists of hospitals.
+    :type hospital_prefs: List[List[int]]
+    :param student_prefs: Preference lists of students.
+    :type student_prefs: List[List[int]]
+    :return: Return [True, VALID_INPUT], if the input preference tables are well-formed.
+    :rtype: Tuple[bool, str]
+    """
+    if n <= 0:
+        return False, "INVALID: n must be >= 1"
+
+    if len(hospital_prefs) != n:
+        return False, f"INVALID: expected {n} hospital preference lines, got {len(hospital_prefs)}"
+    if len(student_prefs) != n:
+        return False, f"INVALID: expected {n} student preference lines, got {len(student_prefs)}"
+
+    return True, "VALID_INPUT"
+
 
 def verify_stability(n: int,
                      hospital_prefs: List[List[int]],
@@ -151,7 +176,7 @@ def read_matching(out_path: str) -> List[Tuple[int, int]]:
     """
     pairs = []
 
-    with open(out_path, "r") as file:
+    with open(out_path, "r", encoding="utf-16") as file:
         for line in file:
             line = line.strip()
             if not line:
@@ -175,7 +200,20 @@ def main():
     out_file = sys.argv[2]
 
     # Read input preferences
-    n, hospital_prefs, student_prefs = data_reader(in_file)
+    try:
+        n, hospital_prefs, student_prefs = data_reader(in_file)
+    except FileNotFoundError:
+        print(f"INVALID: input file not found: {in_file}")
+        return False
+    except Exception as e:
+        print(f"INVALID: failed to parse input file: {e}")
+        return False
+    
+    # Validate preference tables
+    valid_in, inmsg = verify_preferences(n, hospital_prefs, student_prefs)
+    if not valid_in:
+        print(inmsg)
+        return False
 
     # Read matching output pairs
     pairs = read_matching(out_file)
